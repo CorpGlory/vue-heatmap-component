@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Heatmap from './components/Heatmap.vue';
+import * as HeatmapTypes from './components/types';
 
-Vue.config.productionTip = false
-
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+export default Heatmap;
+export { HeatmapTypes };
