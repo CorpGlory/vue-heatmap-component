@@ -8,7 +8,7 @@ import { HeatmapData, ColorRange, ValueRange, Margin } from './types';
 
 import * as d3 from 'd3';
 
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 
 const DEFAULT_COLOR_RANGE: ColorRange = {
   min: 'white',
@@ -79,7 +79,12 @@ export default class Heatmap extends Vue {
     return this.height - this.margin.top - this.margin.bottom;
   }
 
-  mounted() {
+  @Watch('data')
+  onDataChange() {
+    this.renderHeatmap();
+  }
+
+  renderHeatmap() {
     let svg = d3.select('#heatmap')
       .append('svg')
         .attr('width', this.boxWidth + this.margin.left + this.margin.right)
