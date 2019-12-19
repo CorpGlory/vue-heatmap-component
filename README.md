@@ -23,8 +23,12 @@
 ...
 ```
 
+Result:
+
+![image](https://user-images.githubusercontent.com/39257464/71175019-8a99a880-2277-11ea-947a-dff4771c73a3.png)
+
 ## Props
-- `items` — (required) array of values as matrix with dimension NxN, e.g:
+- `data` — (required) array of values as matrix with dimension NxN, e.g:
 ```js
 :data=[
   { x: 'x1', y: 'y1',  value: 10 }, 
