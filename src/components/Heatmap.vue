@@ -1,5 +1,5 @@
 <template>
-  <div id="heatmap">
+  <div :id="id">
   </div>
 </template>
 
@@ -24,10 +24,10 @@ const DEFAULT_STYLES = {
   width: 450,
   height: 450,
   margin: {
-    top: 40,
-    right: 40,
-    bottom: 40,
-    left: 40
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
   }
 }
 
@@ -35,6 +35,9 @@ const DEFAULT_AXIS_PADDING = 0.01;
 
 @Component
 export default class Heatmap extends Vue {
+  @Prop({ required: true })
+  id!: string;
+
   @Prop({ required: true })
   data!: [HeatmapData];
 
@@ -125,13 +128,15 @@ export default class Heatmap extends Vue {
   }
 
   mounted() {
-    this.svg = d3.select('#heatmap')
+    this.svg = d3.select(`#${this.id}`)
       .append('svg')
         .attr('width', this.boxWidth + this.margin.left + this.margin.right)
         .attr('height', this.boxHeight + this.margin.top + this.margin.bottom)
       .append('g')
         .attr('transform',
               `translate(${this.margin.left}, ${this.margin.top})`);
+
+    this.renderHeatmap();
   }
 }
 </script>
