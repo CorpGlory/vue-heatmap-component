@@ -2534,12 +2534,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=6ae1b87e&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":"heatmap"}})}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=42823de4&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=6ae1b87e&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=42823de4&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -14922,10 +14922,10 @@ var DEFAULT_STYLES = {
   width: 450,
   height: 450,
   margin: {
-    top: 40,
-    right: 40,
-    bottom: 40,
-    left: 40
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
   }
 };
 var DEFAULT_AXIS_PADDING = 0.01;
@@ -14968,7 +14968,8 @@ function (_Vue) {
   }, {
     key: "mounted",
     value: function mounted() {
-      this.svg = src_select('#heatmap').append('svg').attr('width', this.boxWidth + this.margin.left + this.margin.right).attr('height', this.boxHeight + this.margin.top + this.margin.bottom).append('g').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.margin.top, ")"));
+      this.svg = src_select("#".concat(this.id)).append('svg').attr('width', this.boxWidth + this.margin.left + this.margin.right).attr('height', this.boxHeight + this.margin.top + this.margin.bottom).append('g').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.margin.top, ")"));
+      this.renderHeatmap();
     }
   }, {
     key: "valueRangeList",
@@ -14995,6 +14996,10 @@ function (_Vue) {
 
   return Heatmap;
 }(external_commonjs_vue_commonjs2_vue_root_Vue_default.a);
+
+__decorate([Prop({
+  required: true
+})], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "id", void 0);
 
 __decorate([Prop({
   required: true
