@@ -67,6 +67,8 @@ export default class Heatmap extends Vue {
 
   //TODO: use SVG type
   svg: any = null;
+  x: any = undefined;
+  y: any = undefined;
 
   get valueRangeList(): [number, number] {
     return [this.valueRange.min, this.valueRange.max]
@@ -90,22 +92,28 @@ export default class Heatmap extends Vue {
     this.renderHeatmap();
   }
 
-  renderHeatmap() {
-    let x = d3.scaleBand()
+  renderScaleBand() {
+    this.x = d3.scaleBand()
       .range([0, this.boxWidth])
       .domain(this.axisX)
       .padding(this.axisPadding);
 
     this.svg.append('g')
       .attr('transform', `translate(0,${this.boxHeight})`)
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(this.x))
 
-    let y = d3.scaleBand()
+    this.y = d3.scaleBand()
       .range([this.boxHeight, 0])
       .domain(this.axisY)
       .padding(this.axisPadding);
+
     this.svg.append('g')
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(this.y));
+  }
+
+  renderHeatmap() {
+    this.svg.selectAll().remove();
+    this.renderScaleBand();
 
     let myColor = d3.scaleLinear()
       .range(this.colorRangeList)
@@ -114,17 +122,12 @@ export default class Heatmap extends Vue {
     let heatmap = this.svg.selectAll()
       .data(this.data)
       .enter()
-
-    //TODO: remove as any
-    for(let i = 0; i < this.data.length; i++) {
-      heatmap
         .append('rect')
-        .attr('x', x(this.data[i].x) as any )
-        .attr('y', y(this.data[i].y) as any )
-        .attr('width', x.bandwidth() )
-        .attr('height', y.bandwidth() )
-        .style('fill', myColor(this.data[i].value) )
-    }
+          .attr('x', (d: HeatmapData) => { return this.x(d.x) } )
+          .attr('y', (d: HeatmapData) => {  return this.y(d.y) } )
+          .attr('width', this.x.bandwidth() )
+          .attr('height', this.y.bandwidth() )
+          .style('fill', (d: HeatmapData) => { return myColor(d.value) } )
   }
 
   mounted() {

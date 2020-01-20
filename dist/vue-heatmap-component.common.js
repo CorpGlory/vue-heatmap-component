@@ -2525,12 +2525,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=42823de4&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=0192fa0e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=42823de4&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=0192fa0e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -14934,6 +14934,8 @@ function (_Vue) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Heatmap).apply(this, arguments)); //TODO: use SVG type
 
     _this.svg = null;
+    _this.x = undefined;
+    _this.y = undefined;
     return _this;
   }
 
@@ -14943,18 +14945,28 @@ function (_Vue) {
       this.renderHeatmap();
     }
   }, {
+    key: "renderScaleBand",
+    value: function renderScaleBand() {
+      this.x = band().range([0, this.boxWidth]).domain(this.axisX).padding(this.axisPadding);
+      this.svg.append('g').attr('transform', "translate(0,".concat(this.boxHeight, ")")).call(axisBottom(this.x));
+      this.y = band().range([this.boxHeight, 0]).domain(this.axisY).padding(this.axisPadding);
+      this.svg.append('g').call(axisLeft(this.y));
+    }
+  }, {
     key: "renderHeatmap",
     value: function renderHeatmap() {
-      var x = band().range([0, this.boxWidth]).domain(this.axisX).padding(this.axisPadding);
-      this.svg.append('g').attr('transform', "translate(0,".concat(this.boxHeight, ")")).call(axisBottom(x));
-      var y = band().range([this.boxHeight, 0]).domain(this.axisY).padding(this.axisPadding);
-      this.svg.append('g').call(axisLeft(y));
-      var myColor = linear_linear().range(this.colorRangeList).domain(this.valueRangeList);
-      var heatmap = this.svg.selectAll().data(this.data).enter(); //TODO: remove as any
+      var _this2 = this;
 
-      for (var i = 0; i < this.data.length; i++) {
-        heatmap.append('rect').attr('x', x(this.data[i].x)).attr('y', y(this.data[i].y)).attr('width', x.bandwidth()).attr('height', y.bandwidth()).style('fill', myColor(this.data[i].value));
-      }
+      this.svg.selectAll().remove();
+      this.renderScaleBand();
+      var myColor = linear_linear().range(this.colorRangeList).domain(this.valueRangeList);
+      var heatmap = this.svg.selectAll().data(this.data).enter().append('rect').attr('x', function (d) {
+        return _this2.x(d.x);
+      }).attr('y', function (d) {
+        return _this2.y(d.y);
+      }).attr('width', this.x.bandwidth()).attr('height', this.y.bandwidth()).style('fill', function (d) {
+        return myColor(d.value);
+      });
     }
   }, {
     key: "mounted",
