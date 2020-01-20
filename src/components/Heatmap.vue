@@ -88,7 +88,7 @@ export default class Heatmap extends Vue {
   }
 
   @Watch('data')
-  onDataChange( ) {
+  onDataChange() {
     this.renderHeatmap();
   }
 
