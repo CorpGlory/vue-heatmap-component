@@ -67,6 +67,7 @@ export default class Heatmap extends Vue {
 
   //TODO: use SVG type
   svg: any = null;
+  tooltip: any = undefined;
   x: any = undefined;
   y: any = undefined;
 
@@ -111,6 +112,41 @@ export default class Heatmap extends Vue {
       .call(d3.axisLeft(this.y));
   }
 
+    renderTooltip() {
+    this.tooltip = d3.select(`#${this.id}`)
+      .append('div')
+      .style('opacity', 0)
+      .attr('class', 'tooltip')
+      .style('background-color', 'white')
+      .style('border', 'solid')
+      .style('border-width', '2px')
+      .style('border-radius', '5px')
+      .style('padding', '5px')
+  }
+
+  mouseOver(d: HeatmapData, i: number, node: any) {
+    this.tooltip
+      .style('opacity', 1)
+    d3.select(node[i])
+      .style('stroke', 'black')
+      .style('opacity', 1)
+  }
+
+  mouseMove(d: HeatmapData, i: number, node: any) {
+    this.tooltip
+      .html('value: ' + d.value)
+      .style('left', (d3.mouse(node[i])[0]+10) + 'px')
+      .style('top', (d3.mouse(node[i])[1]) + 'px')
+  }
+
+  mouseLeave(d: HeatmapData, i: number, node: any) {
+    this.tooltip
+      .style('opacity', 0)
+    d3.select(node[i])
+      .style('stroke', 'none')
+      .style('opacity', 0.8)
+  }
+
   renderHeatmap() {
     this.svg.selectAll().remove();
     this.renderScaleBand();
@@ -128,6 +164,9 @@ export default class Heatmap extends Vue {
           .attr('width', this.x.bandwidth() )
           .attr('height', this.y.bandwidth() )
           .style('fill', (d: HeatmapData) => { return myColor(d.value) } )
+        .on('mouseover', this.mouseOver )
+        .on('mousemove', this.mouseMove )
+        .on('mouseleave', this.mouseLeave )
   }
 
   mounted() {
@@ -139,6 +178,7 @@ export default class Heatmap extends Vue {
         .attr('transform',
               `translate(${this.margin.left}, ${this.margin.top})`);
 
+    this.renderTooltip();
     this.renderHeatmap();
   }
 }
