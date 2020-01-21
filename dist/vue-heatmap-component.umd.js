@@ -2534,12 +2534,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=0192fa0e&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=482e8b87&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=0192fa0e&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=482e8b87&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -14943,6 +14943,7 @@ function (_Vue) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Heatmap).apply(this, arguments)); //TODO: use SVG type
 
     _this.svg = null;
+    _this.tooltip = undefined;
     _this.x = undefined;
     _this.y = undefined;
     return _this;
@@ -14962,6 +14963,28 @@ function (_Vue) {
       this.svg.append('g').call(axisLeft(this.y));
     }
   }, {
+    key: "renderTooltip",
+    value: function renderTooltip() {
+      this.tooltip = src_select("#".concat(this.id)).append('div').style('opacity', 0).attr('class', 'tooltip').style('background-color', 'white').style('border', 'solid').style('border-width', '2px').style('border-radius', '5px').style('padding', '5px');
+    }
+  }, {
+    key: "mouseOver",
+    value: function mouseOver(d, i, node) {
+      this.tooltip.style('opacity', 1);
+      src_select(node[i]).style('stroke', 'black').style('opacity', 1);
+    }
+  }, {
+    key: "mouseMove",
+    value: function mouseMove(d, i, node) {
+      this.tooltip.html('value: ' + d.value).style('left', mouse(node[i])[0] + 10 + 'px').style('top', mouse(node[i])[1] + 'px');
+    }
+  }, {
+    key: "mouseLeave",
+    value: function mouseLeave(d, i, node) {
+      this.tooltip.style('opacity', 0);
+      src_select(node[i]).style('stroke', 'none').style('opacity', 0.8);
+    }
+  }, {
     key: "renderHeatmap",
     value: function renderHeatmap() {
       var _this2 = this;
@@ -14975,12 +14998,13 @@ function (_Vue) {
         return _this2.y(d.y);
       }).attr('width', this.x.bandwidth()).attr('height', this.y.bandwidth()).style('fill', function (d) {
         return myColor(d.value);
-      });
+      }).on('mouseover', this.mouseOver).on('mousemove', this.mouseMove).on('mouseleave', this.mouseLeave);
     }
   }, {
     key: "mounted",
     value: function mounted() {
       this.svg = src_select("#".concat(this.id)).append('svg').attr('width', this.boxWidth + this.margin.left + this.margin.right).attr('height', this.boxHeight + this.margin.top + this.margin.bottom).append('g').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.margin.top, ")"));
+      this.renderTooltip();
       this.renderHeatmap();
     }
   }, {
