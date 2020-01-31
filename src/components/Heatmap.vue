@@ -124,27 +124,24 @@ export default class Heatmap extends Vue {
       .style('padding', '5px');
   }
 
-  mouseOver(d: HeatmapData, i: number, node: any) {
-    this.tooltip
-      .style('opacity', 1);
-    d3.select(node[i])
-      .style('stroke', 'black')
-      .style('opacity', 1);
+  mouseOver(d: any, i: number, node: any): void {
+    this.$emit('tooltip', {
+      displayed: true
+    });
   }
 
-  mouseMove(d: HeatmapData, i: number, node: any) {
-    this.tooltip
-      .html('value: ' + d.value)
-      .style('left', (d3.mouse(node[i])[0] + 10) + 'px')
-      .style('top', (d3.mouse(node[i])[1]) + 'px');
+  mouseMove(d: any, i: number, node: any): void {
+    this.$emit('tooltip', {
+      displayed: true,
+      x: d3.event.clientX - 125,
+      y: d3.event.clientY - 60,
+      content: `value: ${d.value}`
+    });
   }
-
-  mouseLeave(d: HeatmapData, i: number, node: any) {
-    this.tooltip
-      .style('opacity', 0);
-    d3.select(node[i])
-      .style('stroke', 'none')
-      .style('opacity', 0.8);
+  mouseLeave(d: any, i: number, node: any): void {
+    this.$emit('tooltip', {
+      displayed: false
+    });
   }
 
   renderHeatmap() {
