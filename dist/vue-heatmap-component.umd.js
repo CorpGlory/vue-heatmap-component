@@ -2534,12 +2534,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"3bfe7307-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=482e8b87&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f7c8b94a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=cc50c5fa&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=482e8b87&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=cc50c5fa&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -14970,19 +14970,26 @@ function (_Vue) {
   }, {
     key: "mouseOver",
     value: function mouseOver(d, i, node) {
-      this.tooltip.style('opacity', 1);
-      src_select(node[i]).style('stroke', 'black').style('opacity', 1);
+      this.$emit('tooltip', {
+        displayed: true
+      });
     }
   }, {
     key: "mouseMove",
     value: function mouseMove(d, i, node) {
-      this.tooltip.html('value: ' + d.value).style('left', mouse(node[i])[0] + 10 + 'px').style('top', mouse(node[i])[1] + 'px');
+      this.$emit('tooltip', {
+        displayed: true,
+        x: on_event.clientX - 125,
+        y: on_event.clientY - 60,
+        content: "value: ".concat(d.value)
+      });
     }
   }, {
     key: "mouseLeave",
     value: function mouseLeave(d, i, node) {
-      this.tooltip.style('opacity', 0);
-      src_select(node[i]).style('stroke', 'none').style('opacity', 0.8);
+      this.$emit('tooltip', {
+        displayed: false
+      });
     }
   }, {
     key: "renderHeatmap",
