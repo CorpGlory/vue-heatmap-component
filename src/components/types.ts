@@ -20,3 +20,10 @@ export type Margin = {
   bottom: number,
   left: number
 }
+
+export type AxisLabels = {
+  xLabel: string,
+  yLabel: string,
+  xRange: number[],
+  yRange: number[]
+}

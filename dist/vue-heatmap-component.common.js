@@ -2525,12 +2525,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f7c8b94a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=cc50c5fa&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f7c8b94a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=68da87e6&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=cc50c5fa&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=68da87e6&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -14949,9 +14949,32 @@ function (_Vue) {
     key: "renderScaleBand",
     value: function renderScaleBand() {
       this.x = band().range([0, this.boxWidth]).domain(this.axisX).padding(this.axisPadding);
-      this.svg.append('g').attr('transform', "translate(0,".concat(this.boxHeight, ")")).call(axisBottom(this.x));
+      var axisX = band().range([0, this.boxWidth]);
+      var axisY = band().range([this.boxHeight, 0]);
+      this.svg.append('g').attr('transform', "translate(0,".concat(this.boxHeight, ")")).call(axisBottom(axisX));
       this.y = band().range([this.boxHeight, 0]).domain(this.axisY).padding(this.axisPadding);
-      this.svg.append('g').call(axisLeft(this.y));
+      this.svg.append('g').call(axisLeft(axisY));
+      this.renderText();
+    }
+  }, {
+    key: "renderText",
+    value: function renderText() {
+      if (this.axisLabels === undefined) {
+        return;
+      }
+
+      this.svg.selectAll('.y-label-text').data([0]).enter().append('text').attr('x', -1 * this.margin.left).attr('y', this.boxHeight / 2).text(this.axisLabels.yLabel).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+      this.svg.selectAll('.x-label-text').data([0]).enter().append('text').attr('x', this.boxWidth / 2).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xLabel).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+
+      if (this.axisLabels.xRange !== undefined && this.axisLabels.xRange.length > 1) {
+        this.svg.selectAll('.range-x-0').data([0]).enter().append('text').attr('x', 0).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xRange[0]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+        this.svg.selectAll('.range-x-1').data([0]).enter().append('text').attr('x', this.boxWidth - 20).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xRange[1]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+      }
+
+      if (this.axisLabels.yRange !== undefined && this.axisLabels.yRange.length > 1) {
+        this.svg.selectAll('.range-y-1').data([0]).enter().append('text').attr('x', -15).attr('y', 10).text(this.axisLabels.yRange[1]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+        this.svg.selectAll('.range-y-0').data([0]).enter().append('text').attr('x', -15).attr('y', this.boxHeight - 10).text(this.axisLabels.yRange[0]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+      }
     }
   }, {
     key: "renderTooltip",
@@ -15019,12 +15042,12 @@ function (_Vue) {
   }, {
     key: "boxWidth",
     get: function get() {
-      return this.width - this.margin.left - this.margin.right;
+      return this.width - this.margin.right;
     }
   }, {
     key: "boxHeight",
     get: function get() {
-      return this.height - this.margin.top - this.margin.bottom;
+      return this.height - this.margin.top;
     }
   }]);
 
@@ -15082,6 +15105,10 @@ __decorate([Prop({
   required: false,
   default: DEFAULT_AXIS_PADDING
 })], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "axisPadding", void 0);
+
+__decorate([Prop({
+  required: false
+})], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "axisLabels", void 0);
 
 __decorate([Watch('data')], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "onDataChange", null);
 
