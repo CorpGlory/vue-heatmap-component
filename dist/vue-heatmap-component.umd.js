@@ -2534,12 +2534,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"f7c8b94a-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=68da87e6&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1b83aed8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=0eb1d9a4&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=68da87e6&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=0eb1d9a4&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -14940,8 +14940,7 @@ function (_Vue) {
 
     _classCallCheck(this, Heatmap);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Heatmap).apply(this, arguments)); //TODO: use SVG type
-
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Heatmap).apply(this, arguments));
     _this.svg = null;
     _this.tooltip = undefined;
     _this.x = undefined;
@@ -14952,7 +14951,14 @@ function (_Vue) {
   _createClass(Heatmap, [{
     key: "onDataChange",
     value: function onDataChange() {
+      this.createSvg();
       this.renderHeatmap();
+    }
+  }, {
+    key: "createSvg",
+    value: function createSvg() {
+      this.d3Node.selectAll('svg *').remove();
+      this.svg = this.d3Node.select('svg').attr('width', this.boxWidth + this.margin.left + this.margin.right).attr('height', this.boxHeight + this.margin.top + this.margin.bottom).append('g').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.margin.top, ")"));
     }
   }, {
     key: "renderScaleBand",
@@ -14973,10 +14979,10 @@ function (_Vue) {
       }
 
       this.svg.selectAll('.y-label-text').data([0]).enter().append('text').attr('x', -1 * this.margin.left).attr('y', this.boxHeight / 2).text(this.axisLabels.yLabel).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
-      this.svg.selectAll('.x-label-text').data([0]).enter().append('text').attr('x', this.boxWidth / 2).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xLabel).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+      this.svg.selectAll('.x-label-text').data([0]).enter().append('text').attr('x', this.boxWidth / 2 - 10).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xLabel).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
 
       if (this.axisLabels.xRange !== undefined && this.axisLabels.xRange.length > 1) {
-        this.svg.selectAll('.range-x-0').data([0]).enter().append('text').attr('x', 0).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xRange[0]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
+        this.svg.selectAll('.range-x-0').data([0]).enter().append('text').attr('x', 10).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xRange[0]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
         this.svg.selectAll('.range-x-1').data([0]).enter().append('text').attr('x', this.boxWidth - 20).attr('y', this.boxHeight + this.margin.bottom).text(this.axisLabels.xRange[1]).classed('value-text', true).attr('font-family', 'Poppins, sans-serif').attr('font-size', '10px').style('font-weight', 'bold');
       }
 
@@ -15002,7 +15008,7 @@ function (_Vue) {
     value: function mouseMove(d, i, node) {
       this.$emit('tooltip', {
         displayed: true,
-        x: on_event.clientX - 125,
+        x: on_event.clientX - 40,
         y: on_event.clientY - 60,
         content: "value: ".concat(d.value)
       });
@@ -15033,7 +15039,9 @@ function (_Vue) {
   }, {
     key: "mounted",
     value: function mounted() {
-      this.svg = src_select("#".concat(this.id)).append('svg').attr('width', this.boxWidth + this.margin.left + this.margin.right).attr('height', this.boxHeight + this.margin.top + this.margin.bottom).append('g').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.margin.top, ")"));
+      this.d3Node = src_select("#".concat(this.id));
+      this.d3Node.append('svg');
+      this.createSvg();
       this.renderTooltip();
       this.renderHeatmap();
     }
