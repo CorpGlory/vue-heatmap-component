@@ -69,6 +69,7 @@ export default class Heatmap extends Vue {
   axisLabels!: AxisLabels;
 
   //TODO: use SVG type
+  d3Node: any;
   svg: any = null;
   tooltip: any = undefined;
   x: any = undefined;
@@ -93,7 +94,20 @@ export default class Heatmap extends Vue {
 
   @Watch('data')
   onDataChange() {
+    this.createSvg();
     this.renderHeatmap();
+  }
+
+  createSvg() {
+    this.d3Node.selectAll('svg *').remove();
+
+    this.svg = this.d3Node
+      .select('svg')
+        .attr('width', this.boxWidth + this.margin.left + this.margin.right)
+        .attr('height', this.boxHeight + this.margin.top + this.margin.bottom)
+      .append('g')
+        .attr('transform',
+              `translate(${this.margin.left}, ${this.margin.top})`);
   }
 
   renderScaleBand() {
@@ -142,7 +156,7 @@ export default class Heatmap extends Vue {
       .data([0])
       .enter()
       .append('text')
-      .attr('x', this.boxWidth / 2)
+      .attr('x', this.boxWidth / 2 - 10)
       .attr('y', this.boxHeight + this.margin.bottom)
       .text(this.axisLabels.xLabel)
       .classed('value-text', true)
@@ -154,7 +168,7 @@ export default class Heatmap extends Vue {
         .data([0])
         .enter()
         .append('text')
-        .attr('x', 0)
+        .attr('x', 10)
         .attr('y', this.boxHeight + this.margin.bottom)
         .text(this.axisLabels.xRange[0])
         .classed('value-text', true)
@@ -220,7 +234,7 @@ export default class Heatmap extends Vue {
   mouseMove(d: any, i: number, node: any): void {
     this.$emit('tooltip', {
       displayed: true,
-      x: d3.event.clientX - 125,
+      x: d3.event.clientX - 40,
       y: d3.event.clientY - 60,
       content: `value: ${d.value}`
     });
@@ -254,13 +268,9 @@ export default class Heatmap extends Vue {
   }
 
   mounted() {
-    this.svg = d3.select(`#${this.id}`)
-      .append('svg')
-        .attr('width', this.boxWidth + this.margin.left + this.margin.right)
-        .attr('height', this.boxHeight + this.margin.top + this.margin.bottom)
-      .append('g')
-        .attr('transform',
-              `translate(${this.margin.left}, ${this.margin.top})`);
+    this.d3Node = d3.select(`#${this.id}`)
+    this.d3Node.append('svg');
+    this.createSvg();
 
     this.renderTooltip();
     this.renderHeatmap();
