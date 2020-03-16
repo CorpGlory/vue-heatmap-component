@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { HeatmapData, ColorRange, ValueRange, Margin } from './types';
+import { HeatmapData, ColorRange, ValueRange, Margin, AxisLabels } from './types';
 
 import * as d3 from 'd3';
 
@@ -62,8 +62,11 @@ export default class Heatmap extends Vue {
   @Prop({ required: false, default: () => DEFAULT_VALUE_RANGE })
   valueRange!: ValueRange;
 
-  @Prop({required: false, default: DEFAULT_AXIS_PADDING })
+  @Prop({ required: false, default: DEFAULT_AXIS_PADDING })
   axisPadding!: number;
+
+  @Prop({ required: false })
+  axisLabels!: AxisLabels;
 
   //TODO: use SVG type
   svg: any = null;
@@ -81,11 +84,11 @@ export default class Heatmap extends Vue {
   }
 
   get boxWidth(): number {
-    return this.width - this.margin.left - this.margin.right;
+    return this.width - this.margin.right;
   }
 
   get boxHeight(): number {
-    return this.height - this.margin.top - this.margin.bottom;
+    return this.height - this.margin.top;
   }
 
   @Watch('data')
@@ -99,9 +102,14 @@ export default class Heatmap extends Vue {
       .domain(this.axisX)
       .padding(this.axisPadding);
 
+    let axisX = d3.scaleBand()
+      .range([0, this.boxWidth]);
+    let axisY = d3.scaleBand()
+       .range([this.boxHeight, 0]);
+
     this.svg.append('g')
       .attr('transform', `translate(0,${this.boxHeight})`)
-      .call(d3.axisBottom(this.x))
+      .call(d3.axisBottom(axisX))
 
     this.y = d3.scaleBand()
       .range([this.boxHeight, 0])
@@ -109,7 +117,86 @@ export default class Heatmap extends Vue {
       .padding(this.axisPadding);
 
     this.svg.append('g')
-      .call(d3.axisLeft(this.y));
+      .call(d3.axisLeft(axisY));
+
+    this.renderText();
+  }
+
+  renderText() {
+    if(this.axisLabels === undefined) {
+      return;
+    }
+    this.svg.selectAll('.y-label-text')
+      .data([0])
+      .enter()
+      .append('text')
+      .attr('x', -1 * this.margin.left)
+      .attr('y', this.boxHeight / 2)
+      .text(this.axisLabels.yLabel)
+      .classed('value-text', true)
+      .attr('font-family', 'Poppins, sans-serif')
+      .attr('font-size', '10px')
+      .style('font-weight', 'bold');
+
+    this.svg.selectAll('.x-label-text')
+      .data([0])
+      .enter()
+      .append('text')
+      .attr('x', this.boxWidth / 2)
+      .attr('y', this.boxHeight + this.margin.bottom)
+      .text(this.axisLabels.xLabel)
+      .classed('value-text', true)
+      .attr('font-family', 'Poppins, sans-serif')
+      .attr('font-size', '10px')
+      .style('font-weight', 'bold');
+    if(this.axisLabels.xRange !== undefined && this.axisLabels.xRange.length > 1) {
+      this.svg.selectAll('.range-x-0')
+        .data([0])
+        .enter()
+        .append('text')
+        .attr('x', 0)
+        .attr('y', this.boxHeight + this.margin.bottom)
+        .text(this.axisLabels.xRange[0])
+        .classed('value-text', true)
+        .attr('font-family', 'Poppins, sans-serif')
+        .attr('font-size', '10px')
+        .style('font-weight', 'bold');
+      this.svg.selectAll('.range-x-1')
+        .data([0])
+        .enter()
+        .append('text')
+        .attr('x', this.boxWidth - 20)
+        .attr('y', this.boxHeight + this.margin.bottom)
+        .text(this.axisLabels.xRange[1])
+        .classed('value-text', true)
+        .attr('font-family', 'Poppins, sans-serif')
+        .attr('font-size', '10px')
+        .style('font-weight', 'bold');
+    }
+    if(this.axisLabels.yRange !== undefined && this.axisLabels.yRange.length > 1) {
+      this.svg.selectAll('.range-y-1')
+        .data([0])
+        .enter()
+        .append('text')
+        .attr('x', -15)
+        .attr('y', 10)
+        .text(this.axisLabels.yRange[1])
+        .classed('value-text', true)
+        .attr('font-family', 'Poppins, sans-serif')
+        .attr('font-size', '10px')
+        .style('font-weight', 'bold');
+      this.svg.selectAll('.range-y-0')
+        .data([0])
+        .enter()
+        .append('text')
+        .attr('x', -15)
+        .attr('y', this.boxHeight - 10)
+        .text(this.axisLabels.yRange[0])
+        .classed('value-text', true)
+        .attr('font-family', 'Poppins, sans-serif')
+        .attr('font-size', '10px')
+        .style('font-weight', 'bold');
+    }
   }
 
   renderTooltip() {
