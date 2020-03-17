@@ -4,16 +4,13 @@
 </template>
 
 <script lang="ts">
-import { HeatmapData, ColorRange, ValueRange, Margin, AxisLabels } from './types';
+import { HeatmapData, ValueRange, Margin, AxisLabels } from './types';
 
 import * as d3 from 'd3';
 
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 
-const DEFAULT_COLOR_RANGE: ColorRange = {
-  min: 'white',
-  max: '#69b3a2'
-}
+const DEFAULT_COLOR_RANGE = ['white', '#69b3a2'];
 
 const DEFAULT_VALUE_RANGE: ValueRange = {
   min: 1,
@@ -57,7 +54,7 @@ export default class Heatmap extends Vue {
   margin!: Margin;
 
   @Prop({ required: false, default: () => DEFAULT_COLOR_RANGE })
-  colorRange!: ColorRange;
+  colorRange!: any[];
 
   @Prop({ required: false, default: () => DEFAULT_VALUE_RANGE })
   valueRange!: ValueRange;
@@ -77,11 +74,6 @@ export default class Heatmap extends Vue {
 
   get valueRangeList(): [number, number] {
     return [this.valueRange.min, this.valueRange.max]
-  }
-
-  get colorRangeList(): any {
-    //TODO: change return type
-    return [this.colorRange.min, this.colorRange.max]
   }
 
   get boxWidth(): number {
@@ -236,7 +228,7 @@ export default class Heatmap extends Vue {
       displayed: true,
       x: d3.event.clientX - 40,
       y: d3.event.clientY - 60,
-      content: `value: ${d.value}`
+      content: `value: ${d.value.toFixed(2)}`
     });
   }
   mouseLeave(d: any, i: number, node: any): void {
@@ -249,9 +241,9 @@ export default class Heatmap extends Vue {
     this.svg.selectAll().remove();
     this.renderScaleBand();
 
-    let myColor = d3.scaleLinear()
-      .range(this.colorRangeList)
-      .domain(this.valueRangeList)
+    let myColor = d3.scaleQuantile()
+      .domain([this.valueRangeList[0], this.valueRangeList[1]])
+      .range(this.colorRange);
 
     let heatmap = this.svg.selectAll()
       .data(this.data)
