@@ -44,10 +44,10 @@ export default class Heatmap extends Vue {
   @Prop({ required: true })
   axisY!: [string]
 
-  @Prop({ required: false, default: DEFAULT_STYLES.width })
+  @Prop({ required: false })
   width!: number;
 
-  @Prop({ required: false, default: DEFAULT_STYLES.height })
+  @Prop({ required: false })
   height!: number;
 
   @Prop({ required: false, default: () => DEFAULT_STYLES.margin })
@@ -82,12 +82,18 @@ export default class Heatmap extends Vue {
     return range;
   }
 
+  get minOfClientHeightAndWidth(): number {
+    return Math.min(this.$el.clientWidth, this.$el.clientHeight);
+  }
+
   get boxWidth(): number {
-    return this.width - this.margin.right;
+    const width = this.width || this.minOfClientHeightAndWidth;
+    return width - this.margin.right;
   }
 
   get boxHeight(): number {
-    return this.height - this.margin.top;
+    const height = this.height || this.minOfClientHeightAndWidth;
+    return height - this.margin.top;
   }
 
   @Watch('data')
@@ -256,7 +262,7 @@ export default class Heatmap extends Vue {
       .enter()
         .append('rect')
           .attr('x', (d: HeatmapData) => { return this.x(d.x) } )
-          .attr('y', (d: HeatmapData) => {  return this.y(d.y) } )
+          .attr('y', (d: HeatmapData) => { return this.y(d.y) + 1} )
           .attr('width', this.x.bandwidth() )
           .attr('height', this.y.bandwidth() )
           .style('fill', (d: HeatmapData) => { return myColor(d.value) } )
