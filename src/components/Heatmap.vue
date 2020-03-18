@@ -72,8 +72,14 @@ export default class Heatmap extends Vue {
   x: any = undefined;
   y: any = undefined;
 
-  get valueRangeList(): [number, number] {
-    return [this.valueRange.min, this.valueRange.max]
+  get valueRangeList(): number[] {
+    let range = [];
+    const valueDiff = this.valueRange.max - this.valueRange.min;
+    const tickValue = valueDiff / this.colorRange.length;
+    for(let i = 1; i <= this.colorRange.length; i++) {
+      range.push(tickValue * i);
+    }
+    return range;
   }
 
   get boxWidth(): number {
@@ -241,8 +247,8 @@ export default class Heatmap extends Vue {
     this.svg.selectAll().remove();
     this.renderScaleBand();
 
-    let myColor = d3.scaleQuantile()
-      .domain([this.valueRangeList[0], this.valueRangeList[1]])
+    let myColor = d3.scaleLinear()
+      .domain(this.valueRangeList)
       .range(this.colorRange);
 
     let heatmap = this.svg.selectAll()
