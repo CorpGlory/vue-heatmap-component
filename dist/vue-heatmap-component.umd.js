@@ -2707,12 +2707,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1b83aed8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=55703e83&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"1b83aed8-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/Heatmap.vue?vue&type=template&id=150440a5&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{attrs:{"id":_vm.id}})}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=55703e83&
+// CONCATENATED MODULE: ./src/components/Heatmap.vue?vue&type=template&id=150440a5&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -15205,7 +15205,7 @@ function (_Vue) {
       var heatmap = this.svg.selectAll().data(this.data).enter().append('rect').attr('x', function (d) {
         return _this2.x(d.x);
       }).attr('y', function (d) {
-        return _this2.y(d.y);
+        return _this2.y(d.y) + 1;
       }).attr('width', this.x.bandwidth()).attr('height', this.y.bandwidth()).style('fill', function (d) {
         return myColor(d.value);
       }).on('mouseover', this.mouseOver).on('mousemove', this.mouseMove).on('mouseleave', this.mouseLeave);
@@ -15233,14 +15233,21 @@ function (_Vue) {
       return range;
     }
   }, {
+    key: "minOfClientHeightAndWidth",
+    get: function get() {
+      return Math.min(this.$el.clientWidth, this.$el.clientHeight);
+    }
+  }, {
     key: "boxWidth",
     get: function get() {
-      return this.width - this.margin.right;
+      var width = this.width || this.minOfClientHeightAndWidth;
+      return width - this.margin.right;
     }
   }, {
     key: "boxHeight",
     get: function get() {
-      return this.height - this.margin.top;
+      var height = this.height || this.minOfClientHeightAndWidth;
+      return height - this.margin.top;
     }
   }]);
 
@@ -15264,13 +15271,11 @@ __decorate([Prop({
 })], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "axisY", void 0);
 
 __decorate([Prop({
-  required: false,
-  default: DEFAULT_STYLES.width
+  required: false
 })], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "width", void 0);
 
 __decorate([Prop({
-  required: false,
-  default: DEFAULT_STYLES.height
+  required: false
 })], Heatmapvue_type_script_lang_ts_Heatmap.prototype, "height", void 0);
 
 __decorate([Prop({
