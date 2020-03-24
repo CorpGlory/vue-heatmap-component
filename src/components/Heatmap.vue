@@ -240,7 +240,7 @@ export default class Heatmap extends Vue {
       displayed: true,
       x: d3.event.clientX - 40,
       y: d3.event.clientY - 60,
-      content: `value: ${d.value.toFixed(2)}`
+      content: d.value
     });
   }
   mouseLeave(d: any, i: number, node: any): void {
