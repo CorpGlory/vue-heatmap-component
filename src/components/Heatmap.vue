@@ -265,7 +265,13 @@ export default class Heatmap extends Vue {
           .attr('y', (d: HeatmapData) => { return this.y(d.y) + 1} )
           .attr('width', this.x.bandwidth() )
           .attr('height', this.y.bandwidth() )
-          .style('fill', (d: HeatmapData) => { return myColor(d.value) } )
+          .style(
+            'fill', 
+            (d: HeatmapData) => { 
+              if(d.value === null || d.value === undefined) { return 'none'; }
+              return myColor(d.value);
+            }
+          )
         .on('mouseover', this.mouseOver)
         .on('mousemove', this.mouseMove)
         .on('mouseleave', this.mouseLeave)
